@@ -1,5 +1,6 @@
 import { SnowFlake } from "./snowflake"
 import { PerikanLocalBus, type IPerikanEventBus } from "./bus"
+import type { PerikanEvent, PerikanEventData } from "./event"
 
 export type PerikanOptions = {
     workerId: number
@@ -26,5 +27,14 @@ export class Perikan {
 
     nextId(): bigint {
         return this._sf.nextId()
+    }
+
+    /**
+     * 注册事件处理器
+     *
+     * Register event handler
+     */
+    on<Payload extends object>(event: PerikanEvent<Payload>, handler: (data: PerikanEventData<Payload>) => void | Promise<void>) {
+        return this.bus.on(event, handler)
     }
 }
